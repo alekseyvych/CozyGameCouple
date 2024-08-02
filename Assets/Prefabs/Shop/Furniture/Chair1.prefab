@@ -25,13 +25,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6096836045255813963}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: -0.5}
-  m_LocalScale: {x: 0.25, y: 0.2, z: 0.25}
+  m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
+  m_LocalPosition: {x: -0.5, y: 0, z: -0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 420380520507674523}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 45, z: 0}
 --- !u!212 &5100680759326553793
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 913239108657725755}
   - component: {fileID: 50289272773528058}
   m_Layer: 0
-  m_Name: ChairParent
+  m_Name: Chair1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 8528165609578220022}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -136,9 +136,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ec7761ba914409447bb9208a6ba273df, type: 3}
   - {fileID: 21300000, guid: 28b7beeb402e6b346b4cc52d12338fef, type: 3}
   furnitureSize: {x: 1, y: 1, z: 1}
-  GreenMaterial: {fileID: 2100000, guid: fba0c23165536644e858113ccea06337, type: 2}
-  RedMaterial: {fileID: 2100000, guid: 686233c8406accf44993c3302caf65c1, type: 2}
-  placementIndicator: {fileID: 0}
+  price: 0
+  previewSprite: {fileID: 0}
 --- !u!65 &50289272773528058
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -159,4 +158,4 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0.5, y: 0.5, z: -0.5}
+  m_Center: {x: 0, y: 0, z: 0}
