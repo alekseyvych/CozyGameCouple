@@ -5,8 +5,8 @@ public enum ObjectType
 {
     Furniture,
     Carpet,
-    WallDecoration,
-    FloorDecoration
+    Wall,
+    Floor
 }
 
 public interface IPlaceableObject
@@ -16,13 +16,17 @@ public interface IPlaceableObject
     int Orientation { get; }
     ObjectType Type { get; }
     List<Vector3> OccupiedCells { get; }
-    int Price { get; }
-
     bool CanPlace(GridManager gridManager, Vector3 position);
     void Place(GridManager gridManager, Vector3 position);
     void Move(Vector3 newPosition);
     void Rotate(GridManager gridManager);
-    void RotateBack(int originalOrientation); // Updated to use orientation
+    void RotateBack(int originalOrientation);
     void UpdateSprite();
-    List<Vector3> GetOccupiedCells(Vector3 position); // Removed rotation parameter
+    public int GetId();
+    public ObjectType GetObjectType();
+    public int GetPrice();
+    public string GetName();
+    public Sprite GetPreviewSprite();
+
+    List<Vector3> GetOccupiedCells(Vector3 position);
 }

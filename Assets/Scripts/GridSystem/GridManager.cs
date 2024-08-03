@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    public int roomSize = 8; // Each room is 8x8 tiles
-    public int maxRooms = 4; // Total of 4 rooms to expand into (2x2 grid)
+    public int roomSize = 8;
+    public int maxRooms = 4;
     public float cellSize = 1.0f;
     public GameObject roomPrefab;
     public Transform leftWall;
@@ -16,7 +16,7 @@ public class GridManager : MonoBehaviour
     public int gridSizeZ = 8;
 
     private Dictionary<Vector2Int, GameObject> roomFloors;
-    public GameObject house; // Parent GameObject for all rooms
+    public GameObject house;
 
     public Dictionary<Vector3, IPlaceableObject> floorObjects;
 

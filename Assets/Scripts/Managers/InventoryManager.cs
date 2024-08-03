@@ -1,46 +1,93 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
-    private List<GameObject> inventoryItems = new List<GameObject>();
+    public GameObject inventoryUI;
+    public GameObject inventoryButtonPrefab;
+    public Transform contentPanel;
 
-    public void AddToInventory(GameObject itemPrefab)
+    public Button furnitureTabButton;
+    public Button carpetTabButton;
+    public Button wallTabButton;
+    public Button floorTabButton;
+    public Button openInventoryButton;
+    public Button exitButton;
+
+    public GameData gameData;
+    public PlacementController placementController;
+
+    private GameObject selectedItem;
+
+    private void Start()
     {
-        inventoryItems.Add(itemPrefab);
-        Debug.Log(itemPrefab.name + " added to inventory.");
+        furnitureTabButton.onClick.AddListener(() => DisplayCategoryItems(ObjectType.Furniture));
+        carpetTabButton.onClick.AddListener(() => DisplayCategoryItems(ObjectType.Carpet));
+        wallTabButton.onClick.AddListener(() => DisplayCategoryItems(ObjectType.Wall));
+        floorTabButton.onClick.AddListener(() => DisplayCategoryItems(ObjectType.Floor));
+        openInventoryButton.onClick.AddListener(OpenInventory);
+        exitButton.onClick.AddListener(CloseInventory);
+
+        DisplayCategoryItems(ObjectType.Furniture);
     }
 
-    public void RemoveFromInventory(GameObject itemPrefab)
+    void DisplayCategoryItems(ObjectType category)
     {
-        if (inventoryItems.Contains(itemPrefab))
+        foreach (Transform child in contentPanel)
         {
-            inventoryItems.Remove(itemPrefab);
-            Debug.Log(itemPrefab.name + " removed from inventory.");
+            Destroy(child.gameObject);
+        }
+
+        List<GameObject> itemsToDisplay = gameData.GetCategoryItemsInInventory(category);
+
+        foreach (GameObject item in itemsToDisplay)
+        {
+            GameObject newButton = Instantiate(inventoryButtonPrefab, contentPanel);
+
+            TextMeshProUGUI ownedText = newButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            Image itemImage = newButton.transform.GetChild(1).GetChild(0).GetComponent<Image>();
+            TextMeshProUGUI nameText = newButton.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+
+            var placeable = item.GetComponent<IPlaceableObject>();
+
+            int itemCount = gameData.GetItemCount(placeable.GetId(), category);
+            ownedText.text = "Owned: " + itemCount.ToString();
+            nameText.text = placeable.GetName();
+            itemImage.sprite = placeable.GetPreviewSprite();
+
+            Button buttonComponent = newButton.GetComponent<Button>();
+            buttonComponent.onClick.AddListener(() => SelectItem(item, category));
         }
     }
 
-    public void UseItemFromInventory(GameObject itemPrefab)
+    void SelectItem(GameObject item, ObjectType category)
     {
-        if (inventoryItems.Contains(itemPrefab))
+        var placeable = item.GetComponent<IPlaceableObject>();
+
+        if (gameData.GetItemCount(placeable.GetId(), category) > 0)
         {
-            // Start placing the object using the PlacementController
-            PlacementController placementController = FindObjectOfType<PlacementController>();
-            placementController.StartPlacingObject(itemPrefab);
-            RemoveFromInventory(itemPrefab);
+            selectedItem = item;
+            placementController.StartPlacingObject(selectedItem);
+            gameData.RemoveItem(placeable.GetId(), category);
+            CloseInventory();
         }
         else
         {
-            Debug.Log("Item not in inventory.");
+            Debug.Log("No items of this type left in inventory.");
         }
     }
 
-    public void DisplayInventoryItems()
+    public void CloseInventory()
     {
-        // Placeholder for UI implementation to display inventory items
-        foreach (var item in inventoryItems)
-        {
-            Debug.Log("Inventory Item: " + item.name);
-        }
+        selectedItem = null;
+        inventoryUI.SetActive(false);
+    }
+
+    public void OpenInventory()
+    {
+        inventoryUI.SetActive(true);
+        DisplayCategoryItems(ObjectType.Furniture);
     }
 }

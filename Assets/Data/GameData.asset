@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff42ec679694fa44822a4815f406d01, type: 3}
+  m_Name: GameData
+  m_EditorClassIdentifier: 
+  furnitureItems:
+  - {fileID: 8528165609578220022, guid: ba51dad7eb50703489e997b1fa783414, type: 3}
+  - {fileID: 8528165609578220022, guid: 96d0bdbbe640dee49ab751c16dba221e, type: 3}
+  carpetItems:
+  - {fileID: 8528165609578220022, guid: e65e6e4708ea70943816e0da672ff630, type: 3}
+  - {fileID: 8528165609578220022, guid: 36c8bbeb4375cab47a29d92fde282de8, type: 3}
+  wallDecorationItems: []
+  wallFurnitureItems: []

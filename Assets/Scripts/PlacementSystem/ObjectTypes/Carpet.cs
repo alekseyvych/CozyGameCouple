@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Carpet : MonoBehaviour, IPlaceableObject
@@ -12,11 +13,12 @@ public class Carpet : MonoBehaviour, IPlaceableObject
     public int Orientation { get; private set; }
     public ObjectType Type { get; private set; }
     public List<Vector3> OccupiedCells { get; private set; }
-
-    [SerializeField]
-    public int Price { get; private set; }  // Added Price for shop functionality
+    public int id;
 
     public int price;
+
+    public string objectName;
+
     private float cellSize = 1.0f;
 
     [SerializeField]
@@ -24,15 +26,14 @@ public class Carpet : MonoBehaviour, IPlaceableObject
 
     void Start()
     {
-        Initialize(ObjectType.Carpet, carpetSize, 100); // Assuming a default price of 100 for now
+        Initialize(ObjectType.Carpet, carpetSize);
         UpdateSprite();
     }
 
-    public void Initialize(ObjectType type, Vector3 size, int price)
+    public void Initialize(ObjectType type, Vector3 size)
     {
         Type = type;
         Size = size;
-        Price = price;  // Initialize price
         OccupiedCells = new List<Vector3>();
         Orientation = 0; // Default orientation
     }
@@ -163,5 +164,28 @@ public class Carpet : MonoBehaviour, IPlaceableObject
         return new Vector3(x, position.y, z);
     }
 
-    // Additional methods related to shop and inventory can be added here if needed
+    public int GetPrice()
+    {
+        return price;
+    }
+
+    public string GetName()
+    {
+        return objectName;
+    }
+
+    public Sprite GetPreviewSprite()
+    {
+        return previewSprite;
+    }
+
+    public int GetId()
+    {
+        return id;
+    }
+
+    public ObjectType GetObjectType()
+    {
+        return ObjectType.Carpet;
+    }
 }

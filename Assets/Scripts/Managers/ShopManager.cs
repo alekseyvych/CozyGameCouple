@@ -1,79 +1,124 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ShopManager : MonoBehaviour
 {
-    public Transform furnitureShopPanel;
-    public Transform carpetShopPanel;
-    public Transform wallDecorationShopPanel;
-    public Transform floorDecorationShopPanel;
-    public GameObject shopItemPrefab;
-    public InventoryManager inventoryManager;
+    public GameObject shopUI;
+    public GameObject shopButtonPrefab;
+    public Transform contentPanel;
+
+    public Button furnitureTabButton;
+    public Button carpetTabButton;
+    public Button wallTabButton;
+    public Button floorTabButton;
+    public Button exitButton;
+    public Button openShopButton;
+
+    public GameObject storingPanel;
+    public Button placeInInventoryButton;
+    public Button placeInHouseButton;
+    public TextMeshProUGUI storingPanelText;
+
     public PlacementController placementController;
+    public InventoryManager inventoryManager;
     public MoneyManager moneyManager;
 
-    public int playerMoney;
+    public GameData gameData;
 
-    private Dictionary<ObjectType, Transform> shopPanels;
+    private Dictionary<string, List<GameObject>> shopItems = new Dictionary<string, List<GameObject>>();
+    private GameObject selectedItem;
 
     void Start()
     {
-        playerMoney = moneyManager.currentMoney;
+        furnitureTabButton.onClick.AddListener(() => DisplayCategoryItems("Furniture"));
+        carpetTabButton.onClick.AddListener(() => DisplayCategoryItems("Carpet"));
+        wallTabButton.onClick.AddListener(() => DisplayCategoryItems("Wall"));
+        floorTabButton.onClick.AddListener(() => DisplayCategoryItems("Floor"));
+        exitButton.onClick.AddListener(CloseShop);
+        openShopButton.onClick.AddListener(OpenShop);
 
-        shopPanels = new Dictionary<ObjectType, Transform>
-        {
-            { ObjectType.Furniture, furnitureShopPanel },
-            { ObjectType.Carpet, carpetShopPanel },
-            { ObjectType.WallDecoration, wallDecorationShopPanel },
-            { ObjectType.FloorDecoration, floorDecorationShopPanel }
-        };
+        placeInInventoryButton.onClick.AddListener(() => StoreItem(true));
+        placeInHouseButton.onClick.AddListener(() => StoreItem(false));
 
-        PopulateShop(ObjectType.Furniture, "Prefabs/Shop/Furniture");
-        PopulateShop(ObjectType.Carpet, "Prefabs/Shop/Carpet");
-        PopulateShop(ObjectType.WallDecoration, "Prefabs/Shop/Wall");
-        PopulateShop(ObjectType.FloorDecoration, "Prefabs/Shop/Floor");
+        shopItems["Furniture"] = gameData.furnitureItems;
+        shopItems["Carpet"] = gameData.carpetItems;
+        shopItems["Wall"] = gameData.wallItems;
+        shopItems["Floor"] =gameData.floorItems;
+
+        DisplayCategoryItems("Furniture");
     }
 
-    void PopulateShop(ObjectType type, string resourcePath)
+    void DisplayCategoryItems(string category)
     {
-        GameObject[] items = Resources.LoadAll<GameObject>(resourcePath);
-
-        foreach (var item in items)
+        foreach (Transform child in contentPanel)
         {
-            GameObject shopItemButton = Instantiate(shopItemPrefab, shopPanels[type]);
-            shopItemButton.GetComponentInChildren<Text>().text = item.name + " - $" + item.GetComponent<IPlaceableObject>().Price;
-            shopItemButton.GetComponent<Button>().onClick.AddListener(() => OnShopItemClicked(item));
+            Destroy(child.gameObject);
+        }
+
+        foreach (GameObject item in shopItems[category])
+        {
+            Debug.Log(item.name);
+            GameObject newButton = Instantiate(shopButtonPrefab, contentPanel);
+
+            Image itemImage = newButton.transform.GetChild(0).GetChild(0).GetComponent<Image>();
+            TextMeshProUGUI nameText = newButton.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI priceText = newButton.transform.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>();
+
+            var placeable = item.GetComponent<IPlaceableObject>();
+
+            priceText.text = placeable.GetPrice().ToString();
+            nameText.text = placeable.GetName();
+            itemImage.sprite = placeable.GetPreviewSprite();
+
+            Button buttonComponent = newButton.GetComponent<Button>();
+            buttonComponent.onClick.AddListener(() => SelectItem(item));
         }
     }
 
-    void OnShopItemClicked(GameObject itemPrefab)
+    void SelectItem(GameObject item)
     {
-        IPlaceableObject placeableObject = itemPrefab.GetComponent<IPlaceableObject>();
+        var placeable = item.GetComponent<IPlaceableObject>();
 
-        if (playerMoney >= placeableObject.Price)
+        if (moneyManager.SpendMoney(placeable.GetPrice()))
         {
-            playerMoney -= placeableObject.Price;
-            ShowPurchaseOptions(itemPrefab);
+            selectedItem = item;
+            storingPanel.SetActive(true);
+            storingPanelText.text = $"What would you like to do with {placeable.GetName()}?";
         }
         else
         {
-            Debug.Log("Not enough money to purchase this item.");
+            Debug.Log("Not enough money to buy this item.");
         }
     }
 
-    void ShowPurchaseOptions(GameObject itemPrefab)
+    void StoreItem(bool toInventory)
     {
-        // Placeholder for actual UI implementation
-        bool moveToInventory = true; // This would be determined by the player's choice
+        if (selectedItem == null) return;
 
-        if (moveToInventory)
+        if (toInventory)
         {
-            inventoryManager.AddToInventory(itemPrefab);
+            gameData.AddItem(selectedItem.GetInstanceID(), selectedItem.GetComponent<IPlaceableObject>().GetObjectType());
         }
         else
         {
-            placementController.StartPlacingObject(itemPrefab);
+            placementController.StartPlacingObject(selectedItem.gameObject);
+            CloseShop();
         }
+
+        storingPanel.SetActive(false);
+        selectedItem = null;
+    }
+
+    public void CloseShop()
+    {
+        shopUI.SetActive(false);
+    }
+
+    public void OpenShop()
+    {
+        shopUI.SetActive(true);
+        DisplayCategoryItems("Furniture");
     }
 }

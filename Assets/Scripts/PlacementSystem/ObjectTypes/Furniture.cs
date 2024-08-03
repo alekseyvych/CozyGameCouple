@@ -12,27 +12,29 @@ public class Furniture : MonoBehaviour, IPlaceableObject
     public int Orientation { get; private set; }
     public ObjectType Type { get; private set; }
     public List<Vector3> OccupiedCells { get; private set; }
-    public int Price { get; private set; }
 
     private float cellSize = 1.0f;
 
+    public int id;
+
     public int price;
+
+    public string objectName;
 
     public Sprite previewSprite;
 
     void Start()
     {
-        Initialize(ObjectType.Furniture, furnitureSize, 100); // Assuming a default price of 100 for now
+        Initialize(ObjectType.Furniture, furnitureSize);
         UpdateSprite();
     }
 
-    public void Initialize(ObjectType type, Vector3 size, int price)
+    public void Initialize(ObjectType type, Vector3 size)
     {
         Type = type;
         Size = size;
-        Price = price;  // Initialize price
         OccupiedCells = new List<Vector3>();
-        Orientation = 0; // Default orientation
+        Orientation = 0;
     }
 
     public bool CanPlace(GridManager gridManager, Vector3 position)
@@ -161,5 +163,27 @@ public class Furniture : MonoBehaviour, IPlaceableObject
         return new Vector3(x, position.y, z);
     }
 
-    // Additional methods related to shop and inventory can be added here if needed
+    public int GetPrice()
+    {
+        return price;
+    }
+
+    public string GetName()
+    {
+        return objectName;
+    }
+
+    public Sprite GetPreviewSprite()
+    {
+        return previewSprite;
+    }
+    public int GetId()
+    {
+        return id;
+    }
+
+    public ObjectType GetObjectType()
+    {
+        return ObjectType.Furniture;
+    }
 }

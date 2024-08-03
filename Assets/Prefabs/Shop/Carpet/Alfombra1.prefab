@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 6096836045255813963}
   serializedVersion: 2
   m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
-  m_LocalPosition: {x: -0.5, y: 0, z: -0.5}
+  m_LocalPosition: {x: -0.375, y: 0, z: -0.375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: bc2da4e3cf97b4b439f191398cb88be5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c0a05f722e242e849b16e33fffb9366f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 913239108657725755}
   - component: {fileID: 69242553758001721}
   m_Layer: 0
-  m_Name: Chair1
+  m_Name: Alfombra1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -131,14 +131,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Sprites:
-  - {fileID: 21300000, guid: bc2da4e3cf97b4b439f191398cb88be5, type: 3}
-  - {fileID: 21300000, guid: 1bf7571f177b1a24fb259702090adee2, type: 3}
-  - {fileID: 21300000, guid: ec7761ba914409447bb9208a6ba273df, type: 3}
-  - {fileID: 21300000, guid: 28b7beeb402e6b346b4cc52d12338fef, type: 3}
+  - {fileID: 21300000, guid: c0a05f722e242e849b16e33fffb9366f, type: 3}
   furnitureSize: {x: 1, y: 1, z: 1}
   price: 150
-  objectName: Chair
-  previewSprite: {fileID: 21300000, guid: bc2da4e3cf97b4b439f191398cb88be5, type: 3}
+  previewSprite: {fileID: 21300000, guid: c0a05f722e242e849b16e33fffb9366f, type: 3}
 --- !u!65 &69242553758001721
 BoxCollider:
   m_ObjectHideFlags: 0

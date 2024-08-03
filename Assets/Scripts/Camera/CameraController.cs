@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
         actions = new InputActions();
 
         // Find the actions from the Input Action Asset
-        touchPositionAction = actions.Touch.TouchPosition;
+        touchPositionAction = actions.Touch.Press;
         touchDragAction = actions.Touch.Drag;
 
         actions.Touch.Press.performed += ctx =>
