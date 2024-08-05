@@ -8,6 +8,7 @@ public static class SaveSystem
     public static void SaveGame(SaveData saveData)
     {
         string json = JsonUtility.ToJson(saveData);
+
         File.WriteAllText(saveFilePath, json);
     }
 
@@ -15,12 +16,14 @@ public static class SaveSystem
     {
         if (File.Exists(saveFilePath))
         {
+            Debug.Log("Save file found");
             string json = File.ReadAllText(saveFilePath);
             return JsonUtility.FromJson<SaveData>(json);
         }
         else
         {
-            return new SaveData();
+            Debug.Log("Save file not found");
+            return null;
         }
     }
 }

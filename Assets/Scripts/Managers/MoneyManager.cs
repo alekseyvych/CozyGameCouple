@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -5,20 +6,24 @@ public class MoneyManager : MonoBehaviour
 {
     public int currentMoney;
     public TextMeshProUGUI moneyText;
-    private SaveDataManager saveDataManager;
+    private SaveManager saveManager;
 
-    public void Initialize(SaveDataManager saveDataManager)
+    public void Initialize(int money)
     {
-        this.saveDataManager = saveDataManager;
-        currentMoney = saveDataManager.GetSaveData().money;
+        currentMoney = money;
         UpdateMoneyUI();
+    }
+
+    public int GetMoney()
+    {
+        return currentMoney;
     }
 
     public void AddMoney(int amount)
     {
         currentMoney += amount;
         UpdateMoneyUI();
-        saveDataManager.UpdateMoney(currentMoney);
+        saveManager.UpdateMoney(currentMoney);
     }
 
     public bool SpendMoney(int amount)
@@ -27,7 +32,7 @@ public class MoneyManager : MonoBehaviour
         {
             currentMoney -= amount;
             UpdateMoneyUI();
-            saveDataManager.UpdateMoney(currentMoney);
+            saveManager.UpdateMoney(currentMoney);
             return true;
         }
         else
@@ -40,5 +45,10 @@ public class MoneyManager : MonoBehaviour
     void UpdateMoneyUI()
     {
         moneyText.text = "Money: $" + currentMoney.ToString();
+    }
+
+    internal void SetSaveManager(SaveManager saveManager)
+    {
+        this.saveManager = saveManager;
     }
 }

@@ -5337,6 +5337,8 @@ MonoBehaviour:
   gameData: {fileID: 11400000, guid: c8629fd00f8ce224f8ad1452d4692e6e, type: 2}
   moneyManager: {fileID: 597632733}
   inventoryManager: {fileID: 813455439}
+  shopManager: {fileID: 509165660}
+  gridManager: {fileID: 1818209019}
 --- !u!1 &876289364
 GameObject:
   m_ObjectHideFlags: 0
@@ -10294,7 +10296,6 @@ GameObject:
   - component: {fileID: 1919163625}
   - component: {fileID: 1919163624}
   - component: {fileID: 1919163623}
-  - component: {fileID: 1919163622}
   m_Layer: 5
   m_Name: BaseCanvas
   m_TagString: Untagged
@@ -10302,19 +10303,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1919163622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1919163621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1d82d2cb5c9e4d4bbbd0abec8558b35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  furniturePanel: {fileID: 0}
 --- !u!114 &1919163623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10904,7 +10892,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 10000
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

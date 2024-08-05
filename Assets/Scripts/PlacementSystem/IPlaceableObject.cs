@@ -23,6 +23,8 @@ public interface IPlaceableObject
     void RotateBack(int originalOrientation);
     void UpdateSprite();
     public int GetId();
+    public int GetOwnerId();
+    public void SetOwnerId(int id);
     public ObjectType GetObjectType();
     public int GetPrice();
     public string GetName();

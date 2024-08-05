@@ -136,6 +136,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ec7761ba914409447bb9208a6ba273df, type: 3}
   - {fileID: 21300000, guid: 28b7beeb402e6b346b4cc52d12338fef, type: 3}
   furnitureSize: {x: 1, y: 1, z: 1}
+  id: 1
   price: 150
   objectName: Chair
   previewSprite: {fileID: 21300000, guid: bc2da4e3cf97b4b439f191398cb88be5, type: 3}

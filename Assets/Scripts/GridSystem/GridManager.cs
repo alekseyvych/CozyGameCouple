@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ public class GridManager : MonoBehaviour
     public Dictionary<Vector3, IPlaceableObject> floorObjects;
 
     private Vector3 houseOffset;
+    private SaveManager saveManager;
 
     public int scenario = 1;
 
@@ -32,12 +34,24 @@ public class GridManager : MonoBehaviour
         roomFloors = new Dictionary<Vector2Int, GameObject>();
         houseOffset = house.transform.position;
         InitializeGrid();
-        AddRoom("L-D"); 
     }
 
+    public void SetSaveManager(SaveManager saveManager)
+    {
+       this.saveManager = saveManager;
+    }
     void InitializeGrid()
     {
         floorObjects = new Dictionary<Vector3, IPlaceableObject>();
+    }
+
+    public void InitializeDefaultScenario()
+    {
+        roomFloors = new Dictionary<Vector2Int, GameObject>();
+        houseOffset = house.transform.position;
+        InitializeGrid();
+
+        AddRoom("L-D");
     }
 
     void Update()
@@ -54,6 +68,39 @@ public class GridManager : MonoBehaviour
         newRoom.name = $"Room-{roomName}";
 
         roomFloors.Add(roomPosition, newRoom);
+    }
+
+    internal void InitializeFromSaveData(int currentScenario)
+    {
+        roomFloors = new Dictionary<Vector2Int, GameObject>();
+        houseOffset = house.transform.position;
+        InitializeGrid();
+
+        switch (currentScenario)
+        {
+            case 1:
+                AddRoom("L-D");
+                break;
+            case 2:
+                AddRoom("L-D");
+                AddRoom("R-D");
+                break;
+            case 3:
+                AddRoom("L-D");
+                AddRoom("L-U");
+                break;
+            case 4:
+                AddRoom("L-D");
+                AddRoom("R-D");
+                AddRoom("L-U");
+                break;
+            case 5:
+                AddRoom("L-D");
+                AddRoom("R-D");
+                AddRoom("L-U");
+                AddRoom("R-U");
+                break;
+        }
     }
 
     void AddRoom(string room)
@@ -73,12 +120,14 @@ public class GridManager : MonoBehaviour
                     gridSizeX = 16;
                     gridSizeZ = 8;
                     scenario = 2;
+                    saveManager.UpdateScenario(scenario);
                 }
                 else
                 {
                     gridSizeX = 16;
                     gridSizeZ = 16;
                     scenario = 4;
+                    saveManager.UpdateScenario(scenario);
                 }
                 isRDUnlocked = true;
                 break;
@@ -89,12 +138,14 @@ public class GridManager : MonoBehaviour
                     gridSizeX = 16;
                     gridSizeZ = 16;
                     scenario = 4;
+                    saveManager.UpdateScenario(scenario);
                 }
                 else
                 {
                     gridSizeX = 8;
                     gridSizeZ = 16;
                     scenario = 3;
+                    saveManager.UpdateScenario(scenario);
                 }
                 isLUUnlocked = true;
                 break;
@@ -103,6 +154,7 @@ public class GridManager : MonoBehaviour
                 scenario = 5;
                 gridSizeX = 16;
                 gridSizeZ = 16;
+                saveManager.UpdateScenario(scenario);
                 break;
         }
         ConfigureWalls(scenario);

@@ -20,6 +20,12 @@ public class InventoryManager : MonoBehaviour
     public PlacementController placementController;
 
     private GameObject selectedItem;
+    private SaveManager saveManager;
+
+    internal void SetSaveManager(SaveManager saveManager)
+    {
+        this.saveManager = saveManager;
+    }
 
     private void Start()
     {
@@ -31,6 +37,11 @@ public class InventoryManager : MonoBehaviour
         exitButton.onClick.AddListener(CloseInventory);
 
         DisplayCategoryItems(ObjectType.Furniture);
+    }
+
+    public void Initialize(SaveData saveData)
+    {
+        gameData.LoadInventoryData(saveData);
     }
 
     void DisplayCategoryItems(ObjectType category)
@@ -46,14 +57,14 @@ public class InventoryManager : MonoBehaviour
         {
             GameObject newButton = Instantiate(inventoryButtonPrefab, contentPanel);
 
-            TextMeshProUGUI ownedText = newButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI ownedText = newButton.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
             Image itemImage = newButton.transform.GetChild(1).GetChild(0).GetComponent<Image>();
             TextMeshProUGUI nameText = newButton.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
 
             var placeable = item.GetComponent<IPlaceableObject>();
 
             int itemCount = gameData.GetItemCount(placeable.GetId(), category);
-            ownedText.text = "Owned: " + itemCount.ToString();
+            ownedText.text = itemCount.ToString();
             nameText.text = placeable.GetName();
             itemImage.sprite = placeable.GetPreviewSprite();
 

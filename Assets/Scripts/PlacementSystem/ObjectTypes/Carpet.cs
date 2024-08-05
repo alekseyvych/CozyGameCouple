@@ -14,7 +14,7 @@ public class Carpet : MonoBehaviour, IPlaceableObject
     public ObjectType Type { get; private set; }
     public List<Vector3> OccupiedCells { get; private set; }
     public int id;
-
+    public int ownerId;
     public int price;
 
     public string objectName;
@@ -187,5 +187,15 @@ public class Carpet : MonoBehaviour, IPlaceableObject
     public ObjectType GetObjectType()
     {
         return ObjectType.Carpet;
+    }
+
+    public int GetOwnerId()
+    {
+        return ownerId;
+    }
+
+    public void SetOwnerId(int id)
+    {
+        ownerId = id;
     }
 }

@@ -22,6 +22,7 @@ public class Furniture : MonoBehaviour, IPlaceableObject
     public string objectName;
 
     public Sprite previewSprite;
+    public int OwnerId;
 
     void Start()
     {
@@ -185,5 +186,15 @@ public class Furniture : MonoBehaviour, IPlaceableObject
     public ObjectType GetObjectType()
     {
         return ObjectType.Furniture;
+    }
+
+    public int GetOwnerId()
+    {
+        return OwnerId;
+    }
+
+    public void SetOwnerId(int id)
+    {
+        OwnerId = id;
     }
 }

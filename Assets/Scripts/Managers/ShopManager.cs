@@ -29,6 +29,12 @@ public class ShopManager : MonoBehaviour
 
     private Dictionary<string, List<GameObject>> shopItems = new Dictionary<string, List<GameObject>>();
     private GameObject selectedItem;
+    private SaveManager saveManager;
+
+    internal void SetSaveManager(SaveManager saveManager)
+    {
+        this.saveManager = saveManager;
+    }
 
     void Start()
     {
@@ -45,7 +51,7 @@ public class ShopManager : MonoBehaviour
         shopItems["Furniture"] = gameData.furnitureItems;
         shopItems["Carpet"] = gameData.carpetItems;
         shopItems["Wall"] = gameData.wallItems;
-        shopItems["Floor"] =gameData.floorItems;
+        shopItems["Floor"] = gameData.floorItems;
 
         DisplayCategoryItems("Furniture");
     }
@@ -59,7 +65,6 @@ public class ShopManager : MonoBehaviour
 
         foreach (GameObject item in shopItems[category])
         {
-            Debug.Log(item.name);
             GameObject newButton = Instantiate(shopButtonPrefab, contentPanel);
 
             Image itemImage = newButton.transform.GetChild(0).GetChild(0).GetComponent<Image>();
@@ -97,16 +102,19 @@ public class ShopManager : MonoBehaviour
     {
         if (selectedItem == null) return;
 
+        selectedItem.GetComponent<IPlaceableObject>().SetOwnerId(GameManager.playerId);
+
         if (toInventory)
         {
-            gameData.AddItem(selectedItem.GetInstanceID(), selectedItem.GetComponent<IPlaceableObject>().GetObjectType());
+            Debug.Log("Storing item in inventory");
+            gameData.AddItem(selectedItem.GetComponent<IPlaceableObject>().GetId(), selectedItem.GetComponent<IPlaceableObject>().GetObjectType());
+            CloseShop();
         }
         else
         {
             placementController.StartPlacingObject(selectedItem.gameObject);
             CloseShop();
         }
-
         storingPanel.SetActive(false);
         selectedItem = null;
     }
