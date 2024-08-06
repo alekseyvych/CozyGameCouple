@@ -1,5 +1,22 @@
 using System.Collections.Generic;
-using UnityEngine;
+
+[System.Serializable]
+public class PlacedItemData
+{
+    public int itemId;
+    public int ownerId;
+    public int rotation;
+    public int gridId;
+    public int objectType; // 0 -> furniture, 1 -> carpet, 2 -> wall, 3 -> floor
+    public int posX;
+    public int posZ;
+
+    public override string ToString()
+    {
+        return $"PlacedItemData: [ItemId: {itemId}, OwnerId: {ownerId}, Rotation: {rotation}, " +
+               $"GridId: {gridId}, ObjectType: {objectType}, Position: ({posX}, {posZ})]";
+    }
+}
 
 [System.Serializable]
 public class SaveData
@@ -9,6 +26,7 @@ public class SaveData
     public SerializableDictionary<int, int> carpetItemCounts = new SerializableDictionary<int, int>();
     public SerializableDictionary<int, int> wallItemCounts = new SerializableDictionary<int, int>();
     public SerializableDictionary<int, int> floorItemCounts = new SerializableDictionary<int, int>();
+    public List<PlacedItemData> placedItems = new List<PlacedItemData>();
     public int currentScenario;
 
     public override string ToString()
@@ -33,6 +51,11 @@ public class SaveData
         foreach (var item in floorItemCounts)
         {
             result += $"- ID: {item.Key}, Count: {item.Value}\n";
+        }
+        result += "Placed Items:\n";
+        foreach (var placedItem in placedItems)
+        {
+            result += $"- ItemID: {placedItem.itemId}, OwnerID: {placedItem.ownerId}, Rotation: {placedItem.rotation}, GridID: {placedItem.gridId}, Position: ({placedItem.posX}, {placedItem.posZ})\n";
         }
         return result;
     }

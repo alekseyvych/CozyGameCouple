@@ -1,8 +1,17 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
+using System;
 
 public class SaveManager
 {
     private SaveData saveData;
+    public bool IsSaveEnabled = true;
+
+    public void SetIsSaveEnabled(bool value)
+    {
+        IsSaveEnabled = value;
+    }
 
     public SaveData StartSession()
     {
@@ -18,9 +27,8 @@ public class SaveManager
         }
     }
 
-    public SaveManager(GameData gameData)
+    public SaveManager()
     {
-
     }
 
     public void SetSaveData(SaveData saveData)
@@ -34,9 +42,9 @@ public class SaveManager
     }
 
     public void UpdateInventory(Dictionary<int, int> furnitureItemCounts,
-                             Dictionary<int, int> carpetItemCounts,
-                             Dictionary<int, int> wallItemCounts,
-                             Dictionary<int, int> floorItemCounts)
+                                Dictionary<int, int> carpetItemCounts,
+                                Dictionary<int, int> wallItemCounts,
+                                Dictionary<int, int> floorItemCounts)
     {
         saveData.furnitureItemCounts.Clear();
         saveData.carpetItemCounts.Clear();
@@ -78,7 +86,7 @@ public class SaveManager
         SaveSystem.SaveGame(saveData);
     }
 
-    public void SaveAll(GameData gameData, MoneyManager moneyManager, GridManager gridManager)
+    public void SaveAll(GameData gameData, MoneyManager moneyManager, GridManager gridManager, PlacementManager placementManager)
     {
         saveData.money = moneyManager.currentMoney;
         saveData.furnitureItemCounts = gameData.furnitureItemCounts;
@@ -86,13 +94,11 @@ public class SaveManager
         saveData.wallItemCounts = gameData.wallItemCounts;
         saveData.floorItemCounts = gameData.floorItemCounts;
         saveData.currentScenario = gridManager.scenario;
-
-        // Save other game data here if necessary
+        saveData.placedItems = placementManager.GetPlacedItems();
 
         SaveSystem.SaveGame(saveData);
     }
 
-    // Optimized method for saving specific inventory changes
     public void SaveInventoryChange(ObjectType itemType, int itemId, int count)
     {
         SerializableDictionary<int, int> targetDict = null;
@@ -126,5 +132,15 @@ public class SaveManager
 
             SaveSystem.SaveGame(saveData);
         }
+    }
+
+    public void SavePlacedItems(List<PlacedItemData> placedItems)
+    {
+        if (IsSaveEnabled == false)
+        {
+            return;
+        }
+        saveData.placedItems = placedItems;
+        SaveSystem.SaveGame(saveData);
     }
 }

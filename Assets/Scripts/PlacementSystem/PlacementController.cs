@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlacementController : MonoBehaviour
 {
     public PlacementManager placementManager;
     private GameObject currentObject;
-    private Furniture currentFurniture;
+    private IPlaceableObject currentPlaceableObject;
 
     public void StartPlacingObject(GameObject prefab)
     {
@@ -13,34 +14,37 @@ public class PlacementController : MonoBehaviour
             Destroy(currentObject);
         }
 
-        currentObject = Instantiate(prefab, new Vector3(5, 0.5f, 5), Quaternion.identity);
-        currentFurniture = currentObject.GetComponent<Furniture>();
+        currentObject = Instantiate(prefab, new Vector3(5, 0, 5), Quaternion.identity);
+        currentPlaceableObject = currentObject.GetComponent<IPlaceableObject>();
+
+        GameManager.EnterEditMode(); // Enable edit mode when starting to place an object
     }
 
     public void MoveObject()
     {
-        if (currentObject == null || currentFurniture == null) return;
+        if (!GameManager.IsEditMode() || currentObject == null || currentPlaceableObject == null) return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Vector3 newPosition = new Vector3(hit.point.x, 0.5f, hit.point.z);
-            Vector3 snappedPosition = currentFurniture.SnapToGrid(newPosition);
+            Vector3 newPosition = new Vector3(hit.point.x, 0, hit.point.z);
+            Vector3 snappedPosition = currentPlaceableObject.SnapToGrid(newPosition);
             currentObject.transform.position = snappedPosition;
-            placementManager.UpdatePlacementIndicator(currentFurniture, snappedPosition);
+            placementManager.UpdatePlacementIndicator(currentPlaceableObject, snappedPosition);
         }
     }
 
     public void TryPlaceObject()
     {
-        if (currentObject == null || currentFurniture == null) return;
+        if (!GameManager.IsEditMode() || currentObject == null || currentPlaceableObject == null) return;
 
-        Vector3 position = currentFurniture.SnapToGrid(currentObject.transform.position);
-        if (placementManager.CanPlaceObject(currentFurniture, position))
+        Vector3 position = currentPlaceableObject.SnapToGrid(currentObject.transform.position);
+        if (placementManager.CanPlaceObject(currentPlaceableObject, position))
         {
-            placementManager.PlaceObject(currentFurniture, position);
+            placementManager.PlaceObject(currentPlaceableObject, position);
             ClearCurrentPlacement();
             placementManager.HidePlacementIndicators();
+            GameManager.ExitEditMode(); // Disable edit mode after placing the object
         }
         else
         {
@@ -52,9 +56,26 @@ public class PlacementController : MonoBehaviour
     {
         if (currentObject != null)
         {
-            //Destroy(currentObject);
+            // Optionally, you can destroy the current object here
+            // Destroy(currentObject);
         }
         currentObject = null;
-        currentFurniture = null;
+        currentPlaceableObject = null;
+    }
+
+    public void RotateObject()
+    {
+        if (!GameManager.IsEditMode() || currentPlaceableObject == null) return;
+
+        placementManager.RotateObject(currentPlaceableObject);
+        placementManager.UpdatePlacementIndicator(currentPlaceableObject, currentPlaceableObject.Position);
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(1)) // Right-click
+        {
+            RotateObject();
+        }
     }
 }

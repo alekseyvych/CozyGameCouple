@@ -4727,6 +4727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridManager: {fileID: 1818209019}
+  gameData: {fileID: 11400000, guid: c8629fd00f8ce224f8ad1452d4692e6e, type: 2}
   placementIndicatorPrefab: {fileID: 6403325897236126304, guid: d76649122e2675948822733b41321966,
     type: 3}
 --- !u!4 &723923792
@@ -5339,6 +5340,7 @@ MonoBehaviour:
   inventoryManager: {fileID: 813455439}
   shopManager: {fileID: 509165660}
   gridManager: {fileID: 1818209019}
+  placementManager: {fileID: 723923791}
 --- !u!1 &876289364
 GameObject:
   m_ObjectHideFlags: 0

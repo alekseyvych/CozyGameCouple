@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 6096836045255813963}
   serializedVersion: 2
   m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
-  m_LocalPosition: {x: 0, y: 0, z: -0.5}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -111,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 8528165609578220022}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0, z: 0.5}
+  m_LocalPosition: {x: 1, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -131,12 +131,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Sprites:
-  - {fileID: 21300000, guid: bc2da4e3cf97b4b439f191398cb88be5, type: 3}
+  - {fileID: 21300000, guid: 720daf2830aa8a34aacb98aa5ccf5d53, type: 3}
+  - {fileID: 21300000, guid: 4a71b2d56304fa94e845aafb885eefb1, type: 3}
   furnitureSize: {x: 2, y: 1, z: 1}
   id: 2
   price: 425
   objectName: Nightstand
   previewSprite: {fileID: 21300000, guid: 720daf2830aa8a34aacb98aa5ccf5d53, type: 3}
+  OwnerId: 0
+  placedItemId: 0
 --- !u!65 &69242553758001721
 BoxCollider:
   m_ObjectHideFlags: 0

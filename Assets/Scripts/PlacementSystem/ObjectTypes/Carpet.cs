@@ -10,12 +10,14 @@ public class Carpet : MonoBehaviour, IPlaceableObject
 
     public Vector3 Position { get; private set; }
     public Vector3 Size { get; private set; }
-    public int Orientation { get; private set; }
+    public int Orientation { get; set; }
     public ObjectType Type { get; private set; }
     public List<Vector3> OccupiedCells { get; private set; }
     public int id;
     public int ownerId;
     public int price;
+    public int placedItemId;
+
 
     public string objectName;
 
@@ -57,7 +59,7 @@ public class Carpet : MonoBehaviour, IPlaceableObject
                 }
             }
 
-            if (gridManager.floorObjects.ContainsKey(cell))
+            if (gridManager.carpetObjects.ContainsKey(cell))
             {
                 return false;
             }
@@ -69,7 +71,7 @@ public class Carpet : MonoBehaviour, IPlaceableObject
     {
         Position = position;
         UpdateOccupiedCells();
-        var dict = gridManager.floorObjects;
+        var dict = gridManager.carpetObjects;
         foreach (var cell in OccupiedCells)
         {
             dict[cell] = this;
@@ -197,5 +199,15 @@ public class Carpet : MonoBehaviour, IPlaceableObject
     public void SetOwnerId(int id)
     {
         ownerId = id;
+    }
+
+    public int GetPlacedItemId()
+    {
+        return placedItemId;
+    }
+
+    public void SetPlacedItemId(int id)
+    {
+        placedItemId = id;
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,29 +11,27 @@ public class GameManager : MonoBehaviour
     public InventoryManager inventoryManager;
     public ShopManager shopManager;
     public GridManager gridManager;
+    public PlacementManager placementManager;
 
     public static int playerId;
 
+    private static bool isEditMode;
+
+
     void Start()
     {            
-        saveManager = new SaveManager(gameData);
+        saveManager = new SaveManager();
 
         SaveData saveData = saveManager.StartSession();
 
-        moneyManager.SetSaveManager(saveManager);
-        shopManager.SetSaveManager(saveManager);
-        inventoryManager.SetSaveManager(saveManager);
-        gameData.SetSaveManager(saveManager);
-        gridManager.SetSaveManager(saveManager);
+        InitializeSaveManagers(saveManager);
 
         if (saveData == null)
         {
-            Debug.Log("No save data found, initializing new game");
             InitializeNewGame();
         }
         else
         {
-            Debug.Log("Save data found, loading game");
             LoadGame();
         }
 
@@ -50,7 +50,8 @@ public class GameManager : MonoBehaviour
             carpetItemCounts = new SerializableDictionary<int, int>(),
             wallItemCounts = new SerializableDictionary<int, int>(),
             floorItemCounts = new SerializableDictionary<int, int>(),
-            currentScenario = 1
+            currentScenario = 1,
+            placedItems = new List<PlacedItemData>()
         };
 
         saveManager.SetSaveData(saveData);
@@ -59,8 +60,35 @@ public class GameManager : MonoBehaviour
 
     void LoadGame()
     {
+        gameData.Initialize();
         moneyManager.Initialize(saveManager.GetSaveData().money);
         inventoryManager.Initialize(saveManager.GetSaveData());
         gridManager.InitializeFromSaveData(saveManager.GetSaveData().currentScenario);
+        placementManager.LoadPlacedItems();
+    }
+
+    public static void EnterEditMode()
+    {
+        isEditMode = true;
+    }
+
+    public static void ExitEditMode()
+    {
+        isEditMode = false;
+    }
+
+    public static bool IsEditMode()
+    {
+        return isEditMode;
+    }
+
+    private void InitializeSaveManagers(SaveManager saveManager)
+    {
+        moneyManager.SetSaveManager(saveManager);
+        shopManager.SetSaveManager(saveManager);
+        inventoryManager.SetSaveManager(saveManager);
+        gameData.SetSaveManager(saveManager);
+        gridManager.SetSaveManager(saveManager);
+        placementManager.SetSaveManager(saveManager);
     }
 }

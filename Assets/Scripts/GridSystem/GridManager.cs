@@ -19,7 +19,8 @@ public class GridManager : MonoBehaviour
     private Dictionary<Vector2Int, GameObject> roomFloors;
     public GameObject house;
 
-    public Dictionary<Vector3, IPlaceableObject> floorObjects;
+    public Dictionary<Vector3, IPlaceableObject> furnitureObjects;
+    public Dictionary<Vector3, IPlaceableObject> carpetObjects;
 
     private Vector3 houseOffset;
     private SaveManager saveManager;
@@ -33,6 +34,7 @@ public class GridManager : MonoBehaviour
     {
         roomFloors = new Dictionary<Vector2Int, GameObject>();
         houseOffset = house.transform.position;
+        Debug.Log("Borrado");
         InitializeGrid();
     }
 
@@ -42,7 +44,11 @@ public class GridManager : MonoBehaviour
     }
     void InitializeGrid()
     {
-        floorObjects = new Dictionary<Vector3, IPlaceableObject>();
+        if (furnitureObjects == null)
+            furnitureObjects = new Dictionary<Vector3, IPlaceableObject>();
+        if (carpetObjects == null)
+            carpetObjects = new Dictionary<Vector3, IPlaceableObject>();
+        carpetObjects = new Dictionary<Vector3, IPlaceableObject>();
     }
 
     public void InitializeDefaultScenario()
@@ -100,6 +106,19 @@ public class GridManager : MonoBehaviour
                 AddRoom("L-U");
                 AddRoom("R-U");
                 break;
+        }
+    }
+
+    public Dictionary<Vector3, IPlaceableObject> GetObjectDictionary(ObjectType type)
+    {
+        switch (type)
+        {
+            case ObjectType.Furniture:
+                return furnitureObjects;
+            case ObjectType.Carpet:
+                return carpetObjects;
+            default:
+                return null;
         }
     }
 

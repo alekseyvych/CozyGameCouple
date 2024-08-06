@@ -16,13 +16,11 @@ public static class SaveSystem
     {
         if (File.Exists(saveFilePath))
         {
-            Debug.Log("Save file found");
             string json = File.ReadAllText(saveFilePath);
             return JsonUtility.FromJson<SaveData>(json);
         }
         else
         {
-            Debug.Log("Save file not found");
             return null;
         }
     }

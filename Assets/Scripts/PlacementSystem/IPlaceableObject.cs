@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum ObjectType
 {
@@ -13,7 +13,7 @@ public interface IPlaceableObject
 {
     Vector3 Position { get; }
     Vector3 Size { get; }
-    int Orientation { get; }
+    public int Orientation { get; set;}
     ObjectType Type { get; }
     List<Vector3> OccupiedCells { get; }
     bool CanPlace(GridManager gridManager, Vector3 position);
@@ -22,13 +22,15 @@ public interface IPlaceableObject
     void Rotate(GridManager gridManager);
     void RotateBack(int originalOrientation);
     void UpdateSprite();
-    public int GetId();
-    public int GetOwnerId();
-    public void SetOwnerId(int id);
-    public ObjectType GetObjectType();
-    public int GetPrice();
-    public string GetName();
-    public Sprite GetPreviewSprite();
-
+    int GetId();
+    int GetOwnerId();
+    void SetOwnerId(int id);
+    int GetPlacedItemId();
+    void SetPlacedItemId(int id);
+    ObjectType GetObjectType();
+    int GetPrice();
+    string GetName();
+    Sprite GetPreviewSprite();
+    Vector3 SnapToGrid(Vector3 position);
     List<Vector3> GetOccupiedCells(Vector3 position);
 }

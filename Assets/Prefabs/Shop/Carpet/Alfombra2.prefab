@@ -133,8 +133,12 @@ MonoBehaviour:
   Sprites:
   - {fileID: 21300000, guid: fcfb9d500852f7640ae2d47b4cd8814d, type: 3}
   furnitureSize: {x: 2, y: 1, z: 2}
+  id: 4
   price: 600
+  objectName: 
   previewSprite: {fileID: 21300000, guid: fcfb9d500852f7640ae2d47b4cd8814d, type: 3}
+  OwnerId: 0
+  placedItemId: 0
 --- !u!65 &69242553758001721
 BoxCollider:
   m_ObjectHideFlags: 0
