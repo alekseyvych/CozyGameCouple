@@ -53,6 +53,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""27a31876-8151-4970-893d-5768ec972b19"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -121,6 +130,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Drag"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4783d584-1201-4dad-922f-5f991ad5fa8f"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -132,6 +152,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Touch_Press = m_Touch.FindAction("Press", throwIfNotFound: true);
         m_Touch_TouchPosition = m_Touch.FindAction("TouchPosition", throwIfNotFound: true);
         m_Touch_Drag = m_Touch.FindAction("Drag", throwIfNotFound: true);
+        m_Touch_Scroll = m_Touch.FindAction("Scroll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -196,6 +217,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Touch_Press;
     private readonly InputAction m_Touch_TouchPosition;
     private readonly InputAction m_Touch_Drag;
+    private readonly InputAction m_Touch_Scroll;
     public struct TouchActions
     {
         private @InputActions m_Wrapper;
@@ -203,6 +225,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         public InputAction @Press => m_Wrapper.m_Touch_Press;
         public InputAction @TouchPosition => m_Wrapper.m_Touch_TouchPosition;
         public InputAction @Drag => m_Wrapper.m_Touch_Drag;
+        public InputAction @Scroll => m_Wrapper.m_Touch_Scroll;
         public InputActionMap Get() { return m_Wrapper.m_Touch; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -221,6 +244,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Drag.started += instance.OnDrag;
             @Drag.performed += instance.OnDrag;
             @Drag.canceled += instance.OnDrag;
+            @Scroll.started += instance.OnScroll;
+            @Scroll.performed += instance.OnScroll;
+            @Scroll.canceled += instance.OnScroll;
         }
 
         private void UnregisterCallbacks(ITouchActions instance)
@@ -234,6 +260,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Drag.started -= instance.OnDrag;
             @Drag.performed -= instance.OnDrag;
             @Drag.canceled -= instance.OnDrag;
+            @Scroll.started -= instance.OnScroll;
+            @Scroll.performed -= instance.OnScroll;
+            @Scroll.canceled -= instance.OnScroll;
         }
 
         public void RemoveCallbacks(ITouchActions instance)
@@ -256,5 +285,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnPress(InputAction.CallbackContext context);
         void OnTouchPosition(InputAction.CallbackContext context);
         void OnDrag(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
     }
 }

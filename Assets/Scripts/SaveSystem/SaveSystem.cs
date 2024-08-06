@@ -17,6 +17,7 @@ public static class SaveSystem
         if (File.Exists(saveFilePath))
         {
             string json = File.ReadAllText(saveFilePath);
+            Debug.Log(saveFilePath);
             return JsonUtility.FromJson<SaveData>(json);
         }
         else

@@ -2,17 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
     public InputActions actions;
-    private InputAction touchPositionAction;
+    private InputAction pressAction;
     private InputAction touchDragAction;
+    private InputAction scrollAction;
     private bool touchPressed = false;
 
     private Camera mainCamera;
-    public int baseZoom = 1;
-    public int currentZoom;
+    private float baseZoom = 10;
+    private float currentZoom;
+    public float maxZoom = 15;
+    public float minZoom = 1;
+    public float zoomSpeed = 1f;
 
     public float dragSpeed = 1f; // Speed at which the camera moves
 
@@ -25,8 +30,9 @@ public class CameraController : MonoBehaviour
         actions = new InputActions();
 
         // Find the actions from the Input Action Asset
-        touchPositionAction = actions.Touch.Press;
+        pressAction = actions.Touch.Press;
         touchDragAction = actions.Touch.Drag;
+        scrollAction = actions.Touch.Scroll;
 
         actions.Touch.Press.performed += ctx =>
         {
@@ -40,6 +46,8 @@ public class CameraController : MonoBehaviour
             if(logging) Debug.Log("Touch Released");
         };
 
+        actions.Touch.Scroll.performed += OnScroll;
+
         mainCamera.orthographicSize = baseZoom;
         currentZoom = baseZoom;
     }
@@ -47,15 +55,17 @@ public class CameraController : MonoBehaviour
     private void OnEnable()
     {
         // Enable the input actions
-        touchPositionAction.Enable();
+        pressAction.Enable();
         touchDragAction.Enable();
+        scrollAction.Enable();
     }
 
     private void OnDisable()
     {
         // Disable the input actions
-        touchPositionAction.Disable();
+        pressAction.Disable();
         touchDragAction.Disable();
+        scrollAction.Enable();
     }
 
     // Update is called once per frame
@@ -84,5 +94,23 @@ public class CameraController : MonoBehaviour
 
         // Apply the movement to the camera's position
         mainCamera.transform.position += move;
+    }
+
+    private void OnScroll(InputAction.CallbackContext context)
+    {
+        // Read the scroll value
+        float scrollValue = context.ReadValue<float>();
+
+        // Adjust the current zoom based on the scroll value
+        currentZoom -= scrollValue * zoomSpeed;
+
+        // Clamp the zoom value to ensure it stays within the min and max bounds
+        currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
+
+        // Optionally log the scroll and value
+        if (logging)
+        {
+            Debug.Log("Scroll: " + scrollValue + " | Current Value: " + currentZoom);
+        }
     }
 }

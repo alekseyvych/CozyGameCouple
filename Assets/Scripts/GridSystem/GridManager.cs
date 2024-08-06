@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GridManager : MonoBehaviour
 {
@@ -62,8 +63,8 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) AddRoom("R-D");
-        if (Input.GetKeyDown(KeyCode.Alpha2)) AddRoom("L-U");
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !isLUUnlocked) AddRoom("L-U");
+        if (Input.GetKeyDown(KeyCode.Alpha2) && !isRDUnlocked) AddRoom("R-D");
         if (Input.GetKeyDown(KeyCode.Alpha3)) AddRoom("R-U");
     }
 
@@ -132,24 +133,6 @@ public class GridManager : MonoBehaviour
                 gridSizeX = 8;
                 gridSizeZ = 8;
                 break;
-            case "R-D":
-                CreateRoom(new Vector2Int(1, 0), "R-D"); // R-D room
-                if (!isLUUnlocked)
-                {
-                    gridSizeX = 16;
-                    gridSizeZ = 8;
-                    scenario = 2;
-                    saveManager.UpdateScenario(scenario);
-                }
-                else
-                {
-                    gridSizeX = 16;
-                    gridSizeZ = 16;
-                    scenario = 4;
-                    saveManager.UpdateScenario(scenario);
-                }
-                isRDUnlocked = true;
-                break;
             case "L-U":
                 CreateRoom(new Vector2Int(0, 1), "L-U"); // L-U room
                 if (isRDUnlocked)
@@ -168,12 +151,33 @@ public class GridManager : MonoBehaviour
                 }
                 isLUUnlocked = true;
                 break;
+            case "R-D":
+                CreateRoom(new Vector2Int(1, 0), "R-D"); // R-D room
+                if (!isLUUnlocked)
+                {
+                    gridSizeX = 16;
+                    gridSizeZ = 8;
+                    scenario = 2;
+                    saveManager.UpdateScenario(scenario);
+                }
+                else
+                {
+                    gridSizeX = 16;
+                    gridSizeZ = 16;
+                    scenario = 4;
+                    saveManager.UpdateScenario(scenario);
+                }
+                isRDUnlocked = true;
+                break;
             case "R-U":
-                CreateRoom(new Vector2Int(1, 1), "R-U"); // R-U room
-                scenario = 5;
-                gridSizeX = 16;
-                gridSizeZ = 16;
-                saveManager.UpdateScenario(scenario);
+                if (isLUUnlocked && isRDUnlocked)
+                {
+                    CreateRoom(new Vector2Int(1, 1), "R-U"); // R-U room
+                    scenario = 5;
+                    gridSizeX = 16;
+                    gridSizeZ = 16;
+                    saveManager.UpdateScenario(scenario);
+                }
                 break;
         }
         ConfigureWalls(scenario);
@@ -192,53 +196,50 @@ public class GridManager : MonoBehaviour
         {
             case 1:
                 // Scenario 1: Only L-D room
-                ConfigureWall(leftWall, new Vector3(0, 2, 4) + houseOffset, Quaternion.Euler(-90, 0, 0), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(rightWall, new Vector3(4, 2, 0) + houseOffset, Quaternion.Euler(90, 0, 90), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
+                ConfigureWall(leftWall, new Vector3(0, 2, 4) + houseOffset);
+                ConfigureWall(rightWall, new Vector3(4, 2, 0) + houseOffset);
                 leftWallAux.gameObject.SetActive(false);
                 rightWallAux.gameObject.SetActive(false);
                 break;
 
             case 2:
                 // Scenario 2: L-D + R-D rooms
-                ConfigureWall(leftWall, new Vector3(0, 2, 4) + houseOffset, Quaternion.Euler(-90, 0, 0), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(leftWallAux, new Vector3(8, 2, 4) + houseOffset, Quaternion.Euler(-90, 0, 0), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(rightWall, new Vector3(12, 2, 0) + houseOffset, Quaternion.Euler(90, 0, 90), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                rightWallAux.gameObject.SetActive(false);
+                ConfigureWall(leftWall, new Vector3(0, 2, 4) + houseOffset);
+                ConfigureWall(rightWallAux, new Vector3(8, 2, 4) + houseOffset);
+                ConfigureWall(rightWall, new Vector3(12, 2, 0) + houseOffset);
+                leftWallAux.gameObject.SetActive(false);
                 break;
 
             case 3:
                 // Scenario 3: L-D + L-U rooms
-                ConfigureWall(leftWall, new Vector3(0, 2, 12) + houseOffset, Quaternion.Euler(-90, 0, 0), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(rightWall, new Vector3(4, 2, 0) + houseOffset, Quaternion.Euler(90, 0, 90), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(rightWallAux, new Vector3(4, 2, 8) + houseOffset, Quaternion.Euler(-90, 90, 0), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                leftWallAux.gameObject.SetActive(false);
+                ConfigureWall(leftWall, new Vector3(0, 2, 12) + houseOffset);
+                ConfigureWall(rightWall, new Vector3(4, 2, 0) + houseOffset);
+                ConfigureWall(rightWallAux, new Vector3(4, 2, 8) + houseOffset);
+                rightWallAux.gameObject.SetActive(false);
                 break;
 
             case 4:
                 // Scenario 5: L-D + L-U + R-D
-                ConfigureWall(leftWall, new Vector3(0, 2, 12) + houseOffset, Quaternion.Euler(-90, 0, 0), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(rightWallAux, new Vector3(4, 2, 8) + houseOffset, Quaternion.Euler(-90, 90, 0), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(rightWall, new Vector3(12, 2, 0) + houseOffset, Quaternion.Euler(90, 0, 90), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(leftWallAux, new Vector3(8, 2, 4) + houseOffset, Quaternion.Euler(90, 0, 180), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
+                ConfigureWall(leftWall, new Vector3(0, 2, 12) + houseOffset);
+                ConfigureWall(rightWallAux, new Vector3(8, 2, 4) + houseOffset);
+                ConfigureWall(rightWall, new Vector3(12, 2, 0) + houseOffset);
+                ConfigureWall(leftWallAux, new Vector3(4, 2, 8) + houseOffset);
                 break;
 
             case 5:
                 // Scenario 4: L-D + L-U + R-D + R-U rooms
-                ConfigureWall(leftWall, new Vector3(0, 2, 12) + houseOffset, Quaternion.Euler(-90, 0, 0), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(leftWallAux, new Vector3(8, 2, 12) + houseOffset, Quaternion.Euler(-90, 0, 0), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(rightWall, new Vector3(12, 2, 0) + houseOffset, Quaternion.Euler(90, 0, 90), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
-                ConfigureWall(rightWallAux, new Vector3(12, 2, 8) + houseOffset, Quaternion.Euler(90, 0, 90), new Vector3(0.8f, 0.8f, 0.4f), new Vector2(4, 1));
+                ConfigureWall(leftWall, new Vector3(0, 2, 12) + houseOffset);
+                ConfigureWall(leftWallAux, new Vector3(8, 2, 12) + houseOffset);
+                leftWallAux.Rotate(Vector3.up, -90);
+                ConfigureWall(rightWall, new Vector3(12, 2, 0) + houseOffset);
+                ConfigureWall(rightWallAux, new Vector3(12, 2, 8) + houseOffset);
+                rightWallAux.Rotate(Vector3.up, 90);
                 break;
         }
     }
 
-    void ConfigureWall(Transform wall, Vector3 position, Quaternion rotation, Vector3 scale, Vector2 textureScale)
+    void ConfigureWall(Transform wall, Vector3 position)
     {
         wall.position = position;
-        wall.rotation = rotation;
-        wall.localScale = scale;
-
-        Renderer renderer = wall.GetChild(0).GetComponent<Renderer>();
-        renderer.material.mainTextureScale = textureScale;
     }
 }
