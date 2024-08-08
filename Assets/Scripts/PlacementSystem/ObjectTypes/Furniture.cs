@@ -61,6 +61,8 @@ public class Furniture : MonoBehaviour, IPlaceableObject
     {
         Position = position;
         UpdateOccupiedCells();
+        ApplyYPositionOffset();
+
         Debug.Log("Placing furniture object at " + OccupiedCells.Count);
         foreach (var cell in OccupiedCells)
         {
@@ -73,6 +75,8 @@ public class Furniture : MonoBehaviour, IPlaceableObject
     {
         Position = newPosition;
         UpdateOccupiedCells();
+        ApplyYPositionOffset();
+
     }
 
     public void Rotate(GridManager gridManager)
@@ -81,6 +85,7 @@ public class Furniture : MonoBehaviour, IPlaceableObject
         Orientation = (Orientation + 1) % Sprites.Length;
         UpdateSprite();
         UpdateOccupiedCells();
+        ApplyYPositionOffset();
 
         if (!CanPlace(gridManager, Position))
         {
@@ -95,6 +100,7 @@ public class Furniture : MonoBehaviour, IPlaceableObject
         Debug.Log($"Rotating to: {Orientation}");
         UpdateSprite();
         UpdateOccupiedCells();
+        ApplyYPositionOffset();
     }
 
     public void UpdateSprite()
@@ -127,6 +133,18 @@ public class Furniture : MonoBehaviour, IPlaceableObject
             }
         }
         return occupiedCells;
+    }
+
+    private void ApplyYPositionOffset()
+    {
+        // Calculate the y-offset based on zValue
+        float yOffset = -0.000009f * Position.z;
+
+        // Get the child GameObject and adjust its y position
+        Transform childTransform = transform.GetChild(0);
+        Vector3 adjustedPosition = childTransform.position;
+        adjustedPosition.y = yOffset;
+        childTransform.position = adjustedPosition;
     }
 
     protected void UpdateOccupiedCells()

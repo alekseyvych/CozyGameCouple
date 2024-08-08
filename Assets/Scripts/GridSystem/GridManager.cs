@@ -35,7 +35,6 @@ public class GridManager : MonoBehaviour
     {
         roomFloors = new Dictionary<Vector2Int, GameObject>();
         houseOffset = house.transform.position;
-        Debug.Log("Borrado");
         InitializeGrid();
     }
 
@@ -49,7 +48,6 @@ public class GridManager : MonoBehaviour
             furnitureObjects = new Dictionary<Vector3, IPlaceableObject>();
         if (carpetObjects == null)
             carpetObjects = new Dictionary<Vector3, IPlaceableObject>();
-        carpetObjects = new Dictionary<Vector3, IPlaceableObject>();
     }
 
     public void InitializeDefaultScenario()
@@ -66,6 +64,8 @@ public class GridManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1) && !isLUUnlocked) AddRoom("L-U");
         if (Input.GetKeyDown(KeyCode.Alpha2) && !isRDUnlocked) AddRoom("R-D");
         if (Input.GetKeyDown(KeyCode.Alpha3)) AddRoom("R-U");
+
+        if (Input.GetKeyDown(KeyCode.M)) Debug.Log(carpetObjects.Count);
     }
 
     void CreateRoom(Vector2Int roomPosition, string roomName)

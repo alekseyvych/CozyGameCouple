@@ -22,7 +22,7 @@ public class PlacementManager : MonoBehaviour
     {
         InitializePlacementIndicators();
         cellSize = gridManager.cellSize;
-       
+
         if (placedItems == null)
             placedItems = new List<PlacedItemData>();
     }
@@ -52,19 +52,7 @@ public class PlacementManager : MonoBehaviour
 
     public bool CanPlaceObject(IPlaceableObject obj, Vector3 position)
     {
-        var occupiedCells = obj.GetOccupiedCells(position);
-        var objectDict = gridManager.GetObjectDictionary(obj.GetObjectType());
-
-        foreach (var cell in occupiedCells)
-        {
-            if (cell.x < 0 || cell.x >= gridManager.gridSizeX ||
-                cell.z < 0 || cell.z >= gridManager.gridSizeZ ||
-                gridManager.furnitureObjects.ContainsKey(cell))
-            {
-                return false;
-            }
-        }
-        return true;
+        return obj.CanPlace(gridManager, position);
     }
 
     public void PlaceObject(IPlaceableObject obj, Vector3 position)
@@ -72,7 +60,7 @@ public class PlacementManager : MonoBehaviour
         if (CanPlaceObject(obj, position))
         {
             obj.Place(gridManager, position);
-            MarkCellsOccupied(obj, position);
+            MarkCellsOccupied(obj);
 
             PlacedItemData placedItemData = new PlacedItemData
             {
@@ -104,7 +92,7 @@ public class PlacementManager : MonoBehaviour
         if (CanPlaceObject(obj, newPosition))
         {
             UpdatePlacedItemData(obj);
-            MarkCellsOccupied(obj, newPosition);
+            MarkCellsOccupied(obj);
             SavePlacedItems();
         }
         else
@@ -194,9 +182,9 @@ public class PlacementManager : MonoBehaviour
         }
     }
 
-    private void MarkCellsOccupied(IPlaceableObject obj, Vector3 position)
+    private void MarkCellsOccupied(IPlaceableObject obj)
     {
-        var occupiedCells = obj.GetOccupiedCells(position);
+        var occupiedCells = obj.GetOccupiedCells(obj.Position);
         var objectDict = gridManager.GetObjectDictionary(obj.GetObjectType());
 
         foreach (var cell in occupiedCells)
@@ -244,5 +232,4 @@ public class PlacementManager : MonoBehaviour
     {
         return gridManager.GetObjectDictionary((ObjectType)objectType);
     }
-
 }

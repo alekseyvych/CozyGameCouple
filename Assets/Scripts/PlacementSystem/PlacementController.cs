@@ -17,7 +17,7 @@ public class PlacementController : MonoBehaviour
         currentObject = Instantiate(prefab, new Vector3(5, 0, 5), Quaternion.identity);
         currentPlaceableObject = currentObject.GetComponent<IPlaceableObject>();
 
-        GameManager.EnterEditMode(); // Enable edit mode when starting to place an object
+        GameManager.EnterEditMode();
     }
 
     public void MoveObject()
@@ -44,7 +44,7 @@ public class PlacementController : MonoBehaviour
             placementManager.PlaceObject(currentPlaceableObject, position);
             ClearCurrentPlacement();
             placementManager.HidePlacementIndicators();
-            GameManager.ExitEditMode(); // Disable edit mode after placing the object
+            GameManager.ExitEditMode();
         }
         else
         {

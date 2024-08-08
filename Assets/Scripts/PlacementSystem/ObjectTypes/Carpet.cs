@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class Carpet : MonoBehaviour, IPlaceableObject
@@ -13,23 +12,19 @@ public class Carpet : MonoBehaviour, IPlaceableObject
     public int Orientation { get; set; }
     public ObjectType Type { get; private set; }
     public List<Vector3> OccupiedCells { get; private set; }
-    public int id;
-    public int ownerId;
-    public int price;
-    public int placedItemId;
-
-
-    public string objectName;
 
     private float cellSize = 1.0f;
 
-    [SerializeField]
+    public int id;
+    public int price;
+    public string objectName;
     public Sprite previewSprite;
+    public int OwnerId;
+    public int placedItemId;
 
     void Start()
     {
         Initialize(ObjectType.Carpet, carpetSize);
-        UpdateSprite();
     }
 
     public void Initialize(ObjectType type, Vector3 size)
@@ -37,7 +32,14 @@ public class Carpet : MonoBehaviour, IPlaceableObject
         Type = type;
         Size = size;
         OccupiedCells = new List<Vector3>();
-        Orientation = 0; // Default orientation
+        Orientation = 0;
+    }
+
+    public Vector3 SnapToGrid(Vector3 position)
+    {
+        float x = Mathf.Round(position.x / cellSize) * cellSize;
+        float z = Mathf.Round(position.z / cellSize) * cellSize;
+        return new Vector3(x, position.y, z);
     }
 
     public bool CanPlace(GridManager gridManager, Vector3 position)
@@ -46,20 +48,8 @@ public class Carpet : MonoBehaviour, IPlaceableObject
         foreach (var cell in occupiedCells)
         {
             if (cell.x < 0 || cell.x >= gridManager.gridSizeX ||
-                cell.z < 0 || cell.z >= gridManager.gridSizeZ)
-            {
-                return false;
-            }
-
-            if (gridManager.scenario == 4)
-            {
-                if (cell.z > gridManager.gridSizeZ / 2 - 1 && cell.x > gridManager.gridSizeX / 2 - 1)
-                {
-                    return false;
-                }
-            }
-
-            if (gridManager.carpetObjects.ContainsKey(cell))
+                cell.z < 0 || cell.z >= gridManager.gridSizeZ ||
+                gridManager.carpetObjects.ContainsKey(cell))
             {
                 return false;
             }
@@ -71,10 +61,9 @@ public class Carpet : MonoBehaviour, IPlaceableObject
     {
         Position = position;
         UpdateOccupiedCells();
-        var dict = gridManager.carpetObjects;
         foreach (var cell in OccupiedCells)
         {
-            dict[cell] = this;
+            gridManager.carpetObjects[cell] = this;
         }
     }
 
@@ -87,9 +76,9 @@ public class Carpet : MonoBehaviour, IPlaceableObject
     public void Rotate(GridManager gridManager)
     {
         int originalOrientation = Orientation;
-        Orientation = (Orientation + 1) % 4; // Rotate to the next orientation
-        UpdateOccupiedCells();
+        Orientation = (Orientation + 1) % Sprites.Length;
         UpdateSprite();
+        UpdateOccupiedCells();
 
         if (!CanPlace(gridManager, Position))
         {
@@ -99,17 +88,26 @@ public class Carpet : MonoBehaviour, IPlaceableObject
 
     public void RotateBack(int originalOrientation)
     {
+        Debug.Log($"Rotating back to: {originalOrientation}");
         Orientation = originalOrientation;
-        UpdateOccupiedCells();
+        Debug.Log($"Rotating to: {Orientation}");
         UpdateSprite();
+        UpdateOccupiedCells();
+    }
+
+    public void UpdateSprite()
+    {
+        Debug.Log($"Updating sprite to: {Orientation}");
+        var spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = Sprites[Orientation];
+        Debug.Log($"Sprite updated to: {Sprites[Orientation].texture.name}");
     }
 
     public List<Vector3> GetOccupiedCells(Vector3 position)
     {
         var occupiedCells = new List<Vector3>();
-        Vector3 size = Size;
+        Vector3 size = carpetSize;
 
-        // Adjust size based on current orientation
         if (Orientation == 1 || Orientation == 3) // 90 or 270 degrees
         {
             size = new Vector3(Size.z, Size.y, Size.x);
@@ -134,80 +132,14 @@ public class Carpet : MonoBehaviour, IPlaceableObject
         OccupiedCells = GetOccupiedCells(Position);
     }
 
-    protected bool IsValidPosition(GridManager gridManager, Vector3 position, Dictionary<Vector3, IPlaceableObject> dict)
-    {
-        if (position.x < 0 || position.x >= gridManager.gridSizeX ||
-            position.z < 0 || position.z >= gridManager.gridSizeZ)
-        {
-            return false;
-        }
-
-        if (dict.ContainsKey(position))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    public void UpdateSprite()
-    {
-        var spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null && Sprites.Length > 0)
-        {
-            spriteRenderer.sprite = Sprites[Orientation];
-        }
-    }
-
-    public Vector3 SnapToGrid(Vector3 position)
-    {
-        float x = Mathf.Round(position.x / cellSize) * cellSize;
-        float z = Mathf.Round(position.z / cellSize) * cellSize;
-        return new Vector3(x, position.y, z);
-    }
-
-    public int GetPrice()
-    {
-        return price;
-    }
-
-    public string GetName()
-    {
-        return objectName;
-    }
-
-    public Sprite GetPreviewSprite()
-    {
-        return previewSprite;
-    }
-
-    public int GetId()
-    {
-        return id;
-    }
-
-    public ObjectType GetObjectType()
-    {
-        return ObjectType.Carpet;
-    }
-
-    public int GetOwnerId()
-    {
-        return ownerId;
-    }
-
-    public void SetOwnerId(int id)
-    {
-        ownerId = id;
-    }
-
-    public int GetPlacedItemId()
-    {
-        return placedItemId;
-    }
-
-    public void SetPlacedItemId(int id)
-    {
-        placedItemId = id;
-    }
+    // Interface methods implementation
+    public int GetId() => id;
+    public int GetOwnerId() => OwnerId;
+    public void SetOwnerId(int id) => OwnerId = id;
+    public int GetPlacedItemId() => placedItemId;
+    public void SetPlacedItemId(int placedItemId) => this.placedItemId = placedItemId;
+    public ObjectType GetObjectType() => ObjectType.Carpet;
+    public int GetPrice() => price;
+    public string GetName() => objectName;
+    public Sprite GetPreviewSprite() => previewSprite;
 }
