@@ -41,3 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 3349853683
+    locked: 0
+  - name: WallsAndFloors
+    uniqueID: 2268912155
+    locked: 0
+  - name: Grid
+    uniqueID: 813898627
+    locked: 0
+  - name: Carpets
+    uniqueID: 1101767211
+    locked: 0
+  - name: Furniture
+    uniqueID: 3492105183
+    locked: 0
